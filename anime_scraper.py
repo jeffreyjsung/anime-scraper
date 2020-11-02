@@ -1,4 +1,5 @@
 __author__ = "Jeffrey Sung"
+
 import os
 
 try:
@@ -10,6 +11,7 @@ except ImportError:
 
 title = []
 link = []
+
 
 def entry():
     anime_name = input("[+] Enter the name of the anime: ")
@@ -27,27 +29,31 @@ def entry():
     else:
         print("[-] Enter a valid choice.")
 
+
 def get_details(soup):
-    raw_soup = soup.find("ul", {"class":"anime-list"}).find_all("li")
+    raw_soup = soup.find("ul", {"class": "anime-list"}).find_all("li")
     for item in raw_soup:
-        temp_soup = item.find('a', {"class":"name"})
+        temp_soup = item.find('a', {"class": "name"})
         title.append(temp_soup["data-jtitle"])
         link.append(temp_soup["href"])
 
+
 def links(title, link):
     for i in range(len(title)):
-        print ("%d. %s: https://www12.9anime.to%s\n" %(i+1, title[i], link[i]))
+        print("%d. %s: https://www12.9anime.to%s\n" % (i + 1, title[i], link[i]))
+
 
 def details(link):
     source_code = requests.get("https://www12.9anime.to" + link)
     content = source_code.content
     soup = BeautifulSoup(content, "html.parser")
-    container_soup = soup.find("div", {"class":"info"})
-    print("\nName of the anime: ", container_soup.find("h1").getText(),"\n")
-    titles_detail = container_soup.find_all('p',{'itemprop':'description'})
+    container_soup = soup.find("div", {"class": "info"})
+    print("\nName of the anime: ", container_soup.find("h1").getText(), "\n")
+    titles_detail = container_soup.find_all('p', {'itemprop': 'description'})
     for elem in titles_detail:
         print(elem.getText())
         print("\n")
+
 
 if __name__ == "__main__":
     entry()
